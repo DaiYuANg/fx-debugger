@@ -36,18 +36,19 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.WindowEvent;
-import org.fxconnector.AppController;
-import org.fxconnector.ConnectorUtils;
-import org.fxconnector.StageController;
-import org.fxconnector.node.NodeType;
-import org.fxconnector.node.SVDummyNode;
-import org.fxconnector.node.SVNode;
-import org.scenicview.utils.Logger;
+import lombok.extern.slf4j.Slf4j;
+import org.scenicview.fxconnector.AppController;
+import org.scenicview.fxconnector.ConnectorUtils;
+import org.scenicview.fxconnector.StageController;
+import org.scenicview.fxconnector.node.NodeType;
+import org.scenicview.fxconnector.node.SVDummyNode;
+import org.scenicview.fxconnector.node.SVNode;
 import org.scenicview.view.tabs.DetailsTab;
 import org.scenicview.view.tabs.EventLogTab;
 import org.scenicview.view.tabs.JavaDocTab;
 import org.scenicview.view.tabs.ThreeDOMTab;
 
+@Slf4j
 public class ScenegraphTreeView extends TreeView<SVNode> {
 
   private TreeItem<SVNode> previouslySelectedItem;
@@ -463,7 +464,7 @@ public class ScenegraphTreeView extends TreeView<SVNode> {
          * not so dangerous
          */
         if (treeItem == null) {
-          Logger.print("Removing unfound treeItem:" + node.getExtendedId());
+          log.atInfo().log("Removing unfound treeItem:" + node.getExtendedId());
           return;
         }
         final List<TreeItem<SVNode>> treeItemChildren = treeItem.getChildren();
@@ -532,7 +533,7 @@ public class ScenegraphTreeView extends TreeView<SVNode> {
               final TreeItem<SVNode> node = items.get(i);
               final int actualPos = childrens.indexOf(node.getValue());
               if (previousPos > actualPos) {
-                Logger.print(
+                log.atInfo().log(
                     "This should never happen :"
                         + parent.getExtendedId()
                         + " node:"
@@ -576,7 +577,7 @@ public class ScenegraphTreeView extends TreeView<SVNode> {
           iterator.hasNext(); ) {
         final SVNode type = iterator.next();
         if (type.equals(node)) {
-          Logger.print(
+          log.atInfo().log(
               "Error on hashmap:"
                   + node.getExtendedId()
                   + " and type:"

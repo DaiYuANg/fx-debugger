@@ -22,7 +22,7 @@ import java.text.DecimalFormat;
 import java.util.*;
 import java.util.logging.*;
 import javafx.scene.image.Image;
-import org.fxconnector.node.SVNode;
+import org.scenicview.fxconnector.node.SVNode;
 
 /** */
 public class DisplayUtils {

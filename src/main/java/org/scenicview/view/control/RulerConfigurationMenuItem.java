@@ -53,7 +53,7 @@ public class RulerConfigurationMenuItem extends MenuItem {
             //                        }
             //                    });
             //                } catch (final Exception e) {
-            //                    ExceptionLogger.submitException(e);
+            //                    log.atError().log(e);
             //                }
             //                final TextField sliderValue = new TextField();
             //                final Slider slider = new Slider(5, 50, 10);

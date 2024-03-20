@@ -22,13 +22,14 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Menu;
 import javafx.scene.control.Tab;
 import javafx.scene.image.ImageView;
-import org.fxconnector.node.SVNode;
-import org.scenicview.utils.ExceptionLogger;
+import lombok.extern.slf4j.Slf4j;
+import org.scenicview.fxconnector.node.SVNode;
 import org.scenicview.view.ContextMenuContainer;
 import org.scenicview.view.DisplayUtils;
 import org.scenicview.view.ScenicViewGui;
 import org.scenicview.view.control.ProgressWebView;
 
+@Slf4j
 public class JavaDocTab extends Tab implements ContextMenuContainer {
 
   private final ScenicViewGui scenicView;
@@ -83,7 +84,7 @@ public class JavaDocTab extends Tab implements ContextMenuContainer {
       try {
         baseModule = Class.forName(baseClass).getModule().getName();
       } catch (ClassNotFoundException e) {
-        ExceptionLogger.submitException(e);
+        log.atError().log(e.getMessage());
         return;
       }
       if (property != null) {

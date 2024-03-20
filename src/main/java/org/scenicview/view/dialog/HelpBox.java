@@ -24,7 +24,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import org.fxconnector.StageController;
+import org.scenicview.fxconnector.StageController;
 import org.scenicview.view.DisplayUtils;
 import org.scenicview.view.control.ProgressWebView;
 

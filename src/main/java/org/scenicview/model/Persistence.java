@@ -17,11 +17,13 @@
  */
 package org.scenicview.model;
 
+import jakarta.inject.Singleton;
 import java.util.*;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.scenicview.utils.PropertiesUtils;
 
+@Singleton
 public class Persistence {
 
   private static Properties properties; // = PropertiesUtils.loadProperties();

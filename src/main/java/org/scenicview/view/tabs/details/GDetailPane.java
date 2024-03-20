@@ -28,13 +28,14 @@ import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
-import org.fxconnector.details.Detail;
-import org.fxconnector.details.Detail.EditionType;
-import org.fxconnector.details.DetailPaneType;
-import org.scenicview.utils.Logger;
+import lombok.extern.slf4j.Slf4j;
+import org.scenicview.fxconnector.details.Detail;
+import org.scenicview.fxconnector.details.Detail.EditionType;
+import org.scenicview.fxconnector.details.DetailPaneType;
 import org.scenicview.view.DisplayUtils;
 import org.scenicview.view.ScenicViewGui;
 
+@Slf4j
 public class GDetailPane extends TitledPane {
 
   private static final int LABEL_COLUMN = 0;
@@ -267,7 +268,7 @@ public class GDetailPane extends TitledPane {
             try {
               c = Color.valueOf(d.getValue());
             } catch (IllegalArgumentException e) {
-              Logger.print("Error for color: " + d.getValue());
+              log.atInfo().log("Error for color: " + d.getValue());
               c = Color.BLACK;
             }
             Rectangle rect = new Rectangle(10, 10, c);
@@ -316,7 +317,7 @@ public class GDetailPane extends TitledPane {
       pane.updated();
       filterProperties(currentFilter);
     } else {
-      Logger.print("Pane not found for detail:" + detail);
+      log.atInfo().log("Pane not found for detail:" + detail);
     }
   }
 

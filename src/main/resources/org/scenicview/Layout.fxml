@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.scenicview.controller.MainLayoutController"
+            prefHeight="800.0" prefWidth="800.0">
+  <top>
+    <fx:include source="MenuBar.fxml"/>
+  </top>
+  <center>
+    <VBox>
+      <fx:include VBox.vgrow="ALWAYS" source="Content.fxml"/>
+    </VBox>
+  </center>
+  <bottom>
+    <fx:include source="StatusBar.fxml"/>
+  </bottom>
+</BorderPane>

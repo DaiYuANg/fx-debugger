@@ -30,7 +30,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Translate;
-import org.fxconnector.node.SVNode;
+import org.scenicview.fxconnector.node.SVNode;
 
 public class Tile3D extends Box {
 

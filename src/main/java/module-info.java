@@ -16,11 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 module org.scenicview.scenicview {
+  requires transitive javafx.base;
   requires transitive javafx.fxml;
   requires transitive javafx.web;
   requires transitive javafx.swing;
   requires org.slf4j;
   requires static lombok;
+  requires static org.jetbrains.annotations;
   requires io.avaje.inject;
   requires kotlin.stdlib;
   requires java.instrument;
@@ -28,12 +30,19 @@ module org.scenicview.scenicview {
   requires java.logging;
   requires jdk.attach;
   requires java.desktop;
+  requires atlantafx.base;
+  requires com.dlsc.preferencesfx;
+  requires com.google.gson;
+  requires org.apache.commons.lang3;
+  requires org.apache.commons.pool2;
+  requires org.apache.commons.io;
+  requires io.github.oshai.kotlinlogging;
 
   opens org.scenicview.view.cssfx to
       javafx.fxml;
   opens org.scenicview.view.threedom to
       javafx.fxml;
-  opens org.fxconnector.remote to
+  opens org.scenicview.fxconnector.remote to
       java.instrument,
       java.rmi;
 
@@ -41,10 +50,13 @@ module org.scenicview.scenicview {
       javafx.fxml;
   exports org.scenicview.view.threedom to
       javafx.fxml;
-  exports org.fxconnector.remote to
+  exports org.scenicview.fxconnector.remote to
       java.instrument;
-  exports org.fxconnector;
+  exports org.scenicview.fxconnector;
   exports org.scenicview;
+
+  opens org.scenicview.controller to
+      javafx.fxml;
 
   provides io.avaje.inject.spi.Module with
       org.scenicview.ScenicviewModule;

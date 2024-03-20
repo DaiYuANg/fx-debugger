@@ -21,6 +21,8 @@
  */
 package org.scenicview.utils;
 
+import lombok.Getter;
+
 /** Represents operating system with appropriate properties */
 public enum Platform {
   WINDOWS("windows"), // $NON-NLS-1$
@@ -28,28 +30,22 @@ public enum Platform {
   UNIX("unix"), // $NON-NLS-1$
   UNKNOWN(""); // $NON-NLS-1$
 
-  private static Platform current = getCurrentPlatform();
-
-  private String platformId;
-
-  Platform(String platformId) {
-    this.platformId = platformId;
-  }
+  /**
+   * -- GETTER --
+   *
+   * @return the current OS.
+   */
+  @Getter private static Platform current = getCurrentPlatform();
 
   /**
-   * Returns platform id. Usually used to specify platform dependent styles
+   * -- GETTER -- Returns platform id. Usually used to specify platform dependent styles
    *
    * @return platform id
    */
-  public String getPlatformId() {
-    return platformId;
-  }
+  @Getter private String platformId;
 
-  /**
-   * @return the current OS.
-   */
-  public static Platform getCurrent() {
-    return current;
+  Platform(String platformId) {
+    this.platformId = platformId;
   }
 
   private static Platform getCurrentPlatform() {

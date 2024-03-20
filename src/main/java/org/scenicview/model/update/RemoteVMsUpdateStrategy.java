@@ -19,12 +19,14 @@ package org.scenicview.model.update;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.fxconnector.AppController;
-import org.fxconnector.StageController;
-import org.fxconnector.helper.WorkerThread;
-import org.fxconnector.remote.FXConnector;
-import org.scenicview.utils.ExceptionLogger;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.scenicview.fxconnector.AppController;
+import org.scenicview.fxconnector.StageController;
+import org.scenicview.fxconnector.helper.WorkerThread;
+import org.scenicview.fxconnector.remote.FXConnector;
 
+@Slf4j
 public class RemoteVMsUpdateStrategy extends WorkerThread implements UpdateStrategy {
 
   private boolean first = true;
@@ -37,16 +39,13 @@ public class RemoteVMsUpdateStrategy extends WorkerThread implements UpdateStrat
     super(RemoteVMsUpdateStrategy.class.getName(), 500);
   }
 
+  @SneakyThrows
   private List<AppController> getActiveApps() {
     if (first) {
       /** Wait for the server to startup */
       first = false;
       while (connector == null) {
-        try {
-          Thread.sleep(50);
-        } catch (final InterruptedException e) {
-          ExceptionLogger.submitException(e);
-        }
+        Thread.sleep(5000);
       }
     }
 

@@ -29,13 +29,13 @@ import java.util.List;
 import java.util.Properties;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 import org.scenicview.ScenicView;
-import org.scenicview.utils.ExceptionLogger;
-import org.scenicview.utils.Logger;
 import org.scenicview.utils.Platform;
 import org.scenicview.utils.PropertiesUtils;
 import org.scenicview.utils.Utils;
 
+@Slf4j
 /** */
 public class AttachHandlerFactory {
 
@@ -142,7 +142,7 @@ public class AttachHandlerFactory {
       Class.forName("com.sun.tools.attach.AttachNotSupportedException").newInstance();
       return true;
     } catch (final Exception e) {
-      Logger.print("Java Attach API was not found on classpath, will attempt manual lookup...");
+      log.atInfo().log("Java Attach API was not found on classpath, will attempt manual lookup...");
       //            e.printStackTrace();
       return false;
     }
@@ -176,7 +176,7 @@ public class AttachHandlerFactory {
 
     try {
       System.loadLibrary("attach");
-      Logger.print("Loading attach library from " + jdkHome);
+      log.atInfo().log("Loading attach library from " + jdkHome);
     } catch (final UnsatisfiedLinkError e) {
       /** Try to set or modify java.library.path */
       final String path =
@@ -195,8 +195,8 @@ public class AttachHandlerFactory {
         fieldSysPath.set(null, null);
         System.loadLibrary("attach");
       } catch (final Throwable e2) {
-        ExceptionLogger.submitException(e2);
-        Logger.print("Error while trying to put attach.dll in path");
+        log.atError().log(e2.getMessage());
+        log.atInfo().log("Error while trying to put attach.dll in path");
       }
     }
   }
@@ -205,7 +205,7 @@ public class AttachHandlerFactory {
     try {
       final URL url =
           Utils.toURI(jdkPath.getToolsPath(getAttachHandler()).getAbsolutePath()).toURL();
-      Logger.print("Adding to classpath: " + url);
+      log.atInfo().log("Adding to classpath: " + url);
 
       final URLClassLoader sysloader = (URLClassLoader) ClassLoader.getSystemClassLoader();
       final Class<?> sysclass = URLClassLoader.class;
@@ -226,7 +226,7 @@ public class AttachHandlerFactory {
         jdkPaths.add(new JDKToolsJarPair(jdkHome));
       }
     } else if (!isJDKFolder(javaHome)) {
-      Logger.print("Error: No JDK found on system");
+      log.atInfo().log("Error: No JDK found on system");
       return;
     }
 
@@ -234,7 +234,7 @@ public class AttachHandlerFactory {
     // (x86)\Java\jdk1.6.0_30\jre"
     // This is one level too deep. We want to pop up and then go into the
     // lib directory to find tools.jar
-    Logger.print("JDK found at: " + javaHome);
+    log.atInfo().log("JDK found at: " + javaHome);
 
     File jdkHome = new File(javaHome); // + "/../lib/tools.jar");
     if (jdkHome.exists()) {

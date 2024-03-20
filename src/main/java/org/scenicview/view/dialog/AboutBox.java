@@ -18,15 +18,21 @@
 package org.scenicview.view.dialog;
 
 import java.util.Properties;
-import javafx.event.*;
-import javafx.geometry.*;
-import javafx.scene.*;
-import javafx.scene.control.*;
-import javafx.scene.image.*;
-import javafx.scene.layout.*;
-import javafx.stage.*;
-import org.fxconnector.StageController;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.scenicview.ScenicView;
+import org.scenicview.fxconnector.StageController;
 import org.scenicview.utils.PropertiesUtils;
 import org.scenicview.view.DisplayUtils;
 import org.scenicview.view.ScenicViewGui;
@@ -51,7 +57,7 @@ public class AboutBox {
     this.footer = new Button("Close");
     this.footer.setDefaultButton(true);
     this.footer.setOnAction(
-        new EventHandler<ActionEvent>() {
+        new EventHandler<>() {
           @Override
           public void handle(final ActionEvent arg0) {
             stage.close();

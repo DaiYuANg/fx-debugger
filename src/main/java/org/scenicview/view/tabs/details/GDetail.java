@@ -33,11 +33,11 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-import org.fxconnector.ConnectorUtils;
-import org.fxconnector.details.Detail;
-import org.fxconnector.details.Detail.EditionType;
-import org.fxconnector.details.DetailPaneType;
-import org.fxconnector.details.GridConstraintsDetail;
+import org.scenicview.fxconnector.ConnectorUtils;
+import org.scenicview.fxconnector.details.Detail;
+import org.scenicview.fxconnector.details.Detail.EditionType;
+import org.scenicview.fxconnector.details.DetailPaneType;
+import org.scenicview.fxconnector.details.GridConstraintsDetail;
 import org.scenicview.view.ScenicViewGui;
 import org.scenicview.view.tabs.DetailsTab;
 

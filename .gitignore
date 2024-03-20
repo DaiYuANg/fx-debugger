@@ -5,3 +5,4 @@ app/.gradle/
 scenicView.properties
 .DS_Store
 .idea
+.kotlin

@@ -19,7 +19,9 @@ package org.scenicview.utils;
 
 import java.io.*;
 import java.util.Properties;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class PropertiesUtils {
 
   private static final String SCENIC_VIEW_PROPERTIES_FILE = "scenicView.properties";
@@ -53,7 +55,7 @@ public class PropertiesUtils {
         }
       }
     } catch (final Exception e) {
-      Logger.print("Error while loading preferences");
+      log.atError().log("Error while loading preferences");
     }
     return _properties;
   }
@@ -61,14 +63,11 @@ public class PropertiesUtils {
   public static void saveProperties() {
     try {
       final File propertiesFile = new File(SCENIC_VIEW_PROPERTIES_FILE);
-      final FileOutputStream out = new FileOutputStream(propertiesFile);
-      try {
+      try (FileOutputStream out = new FileOutputStream(propertiesFile)) {
         properties.store(out, "ScenicView properties");
-      } finally {
-        out.close();
       }
     } catch (final Exception e) {
-      ExceptionLogger.submitException(e, "Error while saving preferences");
+      log.error(e.getMessage());
     }
   }
 }

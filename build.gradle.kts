@@ -1,3 +1,4 @@
+import io.gitlab.plunts.gradle.plantuml.plugin.ClassDiagramsExtension
 import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
 import java.nio.charset.StandardCharsets
 
@@ -11,6 +12,7 @@ plugins {
   alias(libs.plugins.jreleaser)
   alias(libs.plugins.dotenv)
   alias(libs.plugins.spotless)
+  alias(libs.plugins.plantuml)
   kotlin
   `kotlin-lombok`
   `kotlin-allopen`
@@ -22,6 +24,7 @@ plugins {
 application {
   mainModule = "org.scenicview.scenicview"
   mainClass = "org.scenicview.ScenicView"
+  applicationDefaultJvmArgs = devJvmArguments
 }
 
 group = "org.scenic-view"
@@ -33,6 +36,8 @@ java {
   sourceCompatibility = JavaVersion.toVersion(libs.versions.jdkVersion.get())
   targetCompatibility = JavaVersion.toVersion(libs.versions.jdkVersion.get())
   modularity.inferModulePath.set(true)
+  withSourcesJar()
+  withJavadocJar()
 }
 
 tasks.compileJava {
@@ -41,11 +46,16 @@ tasks.compileJava {
       listOf("--patch-module", "org.scenicview.scenicview=${sourceSets["main"].output.asPath}")
     },
   )
+  options.encoding = StandardCharsets.UTF_8.name()
+  options.isIncremental = true
 }
 
 tasks.compileKotlin {
   val dir: DirectoryProperty = tasks.compileJava.get().destinationDirectory
   destinationDirectory.set(dir)
+  kotlinOptions {
+    incremental = true
+  }
 }
 
 repositories {
@@ -75,9 +85,20 @@ dependencies {
   implementation(libs.preferencesfx)
   implementation(libs.ikonliJavafx)
   implementation(libs.formfx)
+  compileOnly(libs.jetbrainsAnnotation)
 
-  kapt(libs.avajeInjectGenerator)
+  annotationProcessor(libs.avajeInjectGenerator)
   implementation(libs.kotlinLogging)
+
+  implementation(libs.gestaltConfig)
+  implementation(libs.gestaltKotlin)
+  implementation(libs.gestaltJSON)
+  implementation(libs.gestaltToml)
+  implementation(libs.gestaltYaml)
+
+  implementation(libs.apacheCommonIO)
+  implementation(libs.apacheCommonLang3)
+  implementation(libs.apacheCommonPool)
 
   testImplementation(libs.javafxUnitTest)
   testImplementation(enforcedPlatform(libs.junitBom))
@@ -109,7 +130,8 @@ tasks.jar {
     attributes["Premain-Class"] = "org.scenicview.ScenicView"
     attributes["Automatic-Module-Name"] = "org.scenicview.scenicview"
   }
-
+  enabled = true
+  duplicatesStrategy = DuplicatesStrategy.INCLUDE
   archiveFileName = "scenicview.jar"
 }
 
@@ -129,11 +151,12 @@ val platform =
   }
 
 jlink {
-  addExtraDependencies("slf4j")
+  addExtraDependencies("slf4j", "javafx", "kotlin")
   options.addAll("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages")
   launcher {
     name = "scenicView"
     noConsole = true
+    jvmArgs = devJvmArguments
   }
   enableCds()
   imageDir = layout.buildDirectory.dir("scenicview")
@@ -161,13 +184,13 @@ manifest {
 val identWidth = 2
 spotless {
   encoding = StandardCharsets.UTF_8
-//  format("misc") {
-//    target(miscTarget)
-//    indentWithSpaces(identWidth)
-//    trimTrailingWhitespace()
-//    targetExclude("**/node_modules/**/*")
-//    endWithNewline()
-//  }
+  format("misc") {
+    target(miscTarget)
+    indentWithSpaces(identWidth)
+    trimTrailingWhitespace()
+    targetExclude("**/node_modules/**/*")
+    endWithNewline()
+  }
   java {
     target("**/src/**/*.java")
     importOrder()
@@ -207,3 +230,54 @@ idea {
     vcs = "Git"
   }
 }
+
+tasks.test {
+  useJUnitPlatform()
+  maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
+  forkEvery = 100
+  reports.html.required.set(false)
+  reports.junitXml.required.set(false)
+  workingDir = projectDir
+}
+
+configure<ClassDiagramsExtension> {
+  val glob = "${project.group}.**"
+  val internal = "internal_class_diagram"
+  val full = "full_class_diagram"
+  @Suppress("UNCHECKED_CAST")
+  diagram(
+    internal,
+    closureOf<ClassDiagramsExtension.ClassDiagram> {
+      include(packages().withNameLike(glob))
+      writeTo(
+        file(
+          project.layout.buildDirectory.file(
+            "$internal.${project.name}.$PLANTUML_SUFFIX",
+          ),
+        ),
+      )
+    }
+      as groovy.lang.Closure<ClassDiagramsExtension.ClassDiagram>,
+  )
+  @Suppress("UNCHECKED_CAST")
+  diagram(
+    full,
+    closureOf<ClassDiagramsExtension.ClassDiagram> {
+      include(packages().withNameLike(glob))
+      include(packages().recursive())
+      writeTo(
+        file(
+          project.layout.buildDirectory.file(
+            "$full.${project.name}.$PLANTUML_SUFFIX",
+          ),
+        ),
+      )
+    }
+      as groovy.lang.Closure<ClassDiagramsExtension.ClassDiagram>,
+  )
+}
+
+val integrationTestCompilation =
+  kotlin.target.compilations.create("integrationTest") {
+    associateWith(kotlin.target.compilations.getByName("main"))
+  }

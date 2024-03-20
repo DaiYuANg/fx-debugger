@@ -17,7 +17,7 @@
  */
 package org.scenicview.view;
 
-import org.fxconnector.node.SVNode;
+import org.scenicview.fxconnector.node.SVNode;
 
 interface NodeFilter {
   /**

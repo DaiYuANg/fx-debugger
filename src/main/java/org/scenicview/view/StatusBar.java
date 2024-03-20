@@ -29,6 +29,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.util.Duration;
+import org.jetbrains.annotations.NotNull;
 
 class StatusBar extends HBox {
   private final Label windowTypeLabel;
@@ -82,13 +83,13 @@ class StatusBar extends HBox {
     standardNodes.addAll(getChildrenUnmodifiable());
   }
 
-  private Label createValueLabel(final Tooltip tooltip) {
+  private @NotNull Label createValueLabel(final Tooltip tooltip) {
     final Label label = createLabel("", tooltip);
     label.getStyleClass().setAll("label", "value-label");
     return label;
   }
 
-  private Label createLabel(final String value, final Tooltip tooltip) {
+  private @NotNull Label createLabel(final String value, final Tooltip tooltip) {
     final Label label = new Label(value);
     label.getStyleClass().add("value-name");
     if (tooltip != null) {

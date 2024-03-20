@@ -20,11 +20,12 @@ package org.scenicview.model.update;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Platform;
-import org.fxconnector.AppController;
-import org.fxconnector.StageController;
-import org.scenicview.utils.Logger;
+import lombok.extern.slf4j.Slf4j;
+import org.scenicview.fxconnector.AppController;
+import org.scenicview.fxconnector.StageController;
 import org.scenicview.view.ScenicViewGui;
 
+@Slf4j
 public final class AppsRepository {
 
   private final List<AppController> apps = new ArrayList<>();
@@ -113,12 +114,12 @@ public final class AppsRepository {
   }
 
   private void dumpStatus(final String operation, final int id) {
-    Logger.print(operation + ":" + id);
-    for (int i = 0; i < apps.size(); i++) {
-      Logger.print("App:" + apps.get(i).getID());
-      final List<StageController> scs = apps.get(i).getStages();
-      for (int j = 0; j < scs.size(); j++) {
-        Logger.print("\tStage:" + scs.get(j).getID().getStageID());
+    log.atInfo().log(operation + ":" + id);
+    for (AppController app : apps) {
+      log.atInfo().log("App:" + app.getID());
+      final List<StageController> scs = app.getStages();
+      for (StageController sc : scs) {
+        log.atInfo().log("\tStage:" + sc.getID().getStageID());
       }
     }
   }

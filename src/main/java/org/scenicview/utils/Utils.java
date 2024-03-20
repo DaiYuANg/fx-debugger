@@ -19,7 +19,9 @@ package org.scenicview.utils;
 
 import java.io.File;
 import java.net.*;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class Utils {
 
   public static boolean checkPath(final String path) {
@@ -39,7 +41,7 @@ public class Utils {
       }
       return new URI(uri);
     } catch (final URISyntaxException e) {
-      ExceptionLogger.submitException(e);
+      log.atError().log(e.getMessage());
       return null;
     }
   }
@@ -49,9 +51,7 @@ public class Utils {
       @SuppressWarnings("deprecation")
       final URL url = new File(path).toURL();
       return new URI(url.getProtocol(), url.getHost(), url.getPath(), null);
-    } catch (final URISyntaxException ex) {
-      ex.printStackTrace();
-    } catch (final MalformedURLException ex) {
+    } catch (final URISyntaxException | MalformedURLException ex) {
       ex.printStackTrace();
     }
     return null;

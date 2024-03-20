@@ -18,7 +18,7 @@
 package org.scenicview.model.update;
 
 import java.util.List;
-import org.fxconnector.AppController;
+import org.scenicview.fxconnector.AppController;
 
 /** This strategy will be used when we are showing only one stage */
 public class LocalUpdateStrategy implements UpdateStrategy {

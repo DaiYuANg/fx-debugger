@@ -54,31 +54,31 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
-import org.fxconnector.AppController;
-import org.fxconnector.Configuration;
-import org.fxconnector.ConnectorUtils;
-import org.fxconnector.StageController;
-import org.fxconnector.StageControllerImpl;
-import org.fxconnector.StageID;
-import org.fxconnector.event.AnimationsCountEvent;
-import org.fxconnector.event.DetailsEvent;
-import org.fxconnector.event.EvLogEvent;
-import org.fxconnector.event.FXConnectorEvent;
-import org.fxconnector.event.FXConnectorEvent.SVEventType;
-import org.fxconnector.event.FXConnectorEventDispatcher;
-import org.fxconnector.event.MousePosEvent;
-import org.fxconnector.event.NodeAddRemoveEvent;
-import org.fxconnector.event.NodeCountEvent;
-import org.fxconnector.event.NodeSelectedEvent;
-import org.fxconnector.event.SceneDetailsEvent;
-import org.fxconnector.event.ShortcutEvent;
-import org.fxconnector.event.WindowDetailsEvent;
-import org.fxconnector.node.SVNode;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.scenicview.fxconnector.AppController;
+import org.scenicview.fxconnector.Configuration;
+import org.scenicview.fxconnector.ConnectorUtils;
+import org.scenicview.fxconnector.StageController;
+import org.scenicview.fxconnector.StageControllerImpl;
+import org.scenicview.fxconnector.StageID;
+import org.scenicview.fxconnector.event.AnimationsCountEvent;
+import org.scenicview.fxconnector.event.DetailsEvent;
+import org.scenicview.fxconnector.event.EvLogEvent;
+import org.scenicview.fxconnector.event.FXConnectorEvent;
+import org.scenicview.fxconnector.event.FXConnectorEvent.SVEventType;
+import org.scenicview.fxconnector.event.FXConnectorEventDispatcher;
+import org.scenicview.fxconnector.event.MousePosEvent;
+import org.scenicview.fxconnector.event.NodeAddRemoveEvent;
+import org.scenicview.fxconnector.event.NodeCountEvent;
+import org.scenicview.fxconnector.event.NodeSelectedEvent;
+import org.scenicview.fxconnector.event.SceneDetailsEvent;
+import org.scenicview.fxconnector.event.ShortcutEvent;
+import org.scenicview.fxconnector.event.WindowDetailsEvent;
+import org.scenicview.fxconnector.node.SVNode;
 import org.scenicview.model.Persistence;
 import org.scenicview.model.update.AppsRepository;
 import org.scenicview.model.update.UpdateStrategy;
-import org.scenicview.utils.ExceptionLogger;
-import org.scenicview.utils.Logger;
 import org.scenicview.view.control.FilterTextField;
 import org.scenicview.view.dialog.AboutBox;
 import org.scenicview.view.dialog.HelpBox;
@@ -90,6 +90,7 @@ import org.scenicview.view.tabs.JavaDocTab;
 import org.scenicview.view.tabs.ThreeDOMTab;
 
 /** The base UI */
+@Slf4j
 public class ScenicViewGui {
 
   private static final String HELP_URL = "http://fxexperience.com/scenic-view/help";
@@ -171,7 +172,7 @@ public class ScenicViewGui {
             }
 
           } else {
-            Logger.print("Unused event " + appEvent);
+            log.atInfo().log("Unused event " + appEvent);
           }
         }
 
@@ -195,7 +196,7 @@ public class ScenicViewGui {
   private final AppsRepository appRepository;
 
   public StageController activeStage;
-  private SVNode selectedNode;
+  @Getter private SVNode selectedNode;
 
   private TabPane tabPane;
   private DetailsTab detailsTab;
@@ -229,7 +230,7 @@ public class ScenicViewGui {
                     try {
                       doDispatchEvent(eventQueue.remove(0));
                     } catch (final Exception e) {
-                      ExceptionLogger.submitException(e);
+                      log.atError().log(e.getMessage());
                     }
                   }
                 }));
@@ -878,7 +879,7 @@ public class ScenicViewGui {
   //
   //            }
   //        } catch (final Exception e) {
-  //            ExceptionLogger.submitException(e);
+  //            log.atError().log(e);
   //        }
   //    }
 
@@ -1015,10 +1016,6 @@ public class ScenicViewGui {
       threeDOMTab.setSelectedNode(value); // 3D addition
       cssfxTab.setActiveStage((controller == null) ? null : controller.getID());
     }
-  }
-
-  public SVNode getSelectedNode() {
-    return selectedNode;
   }
 
   public void removeNode() {
@@ -1321,7 +1318,7 @@ public class ScenicViewGui {
         break;
       default:
         {
-          Logger.print("Unused event for type " + appEvent);
+          log.atInfo().log("Unused event for type " + appEvent);
           break;
         }
     }
