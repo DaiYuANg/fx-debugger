@@ -87,6 +87,7 @@ dependencies {
   implementation(libs.formfx)
   compileOnly(libs.jetbrainsAnnotation)
 
+//  annotationProcessor(libs.avajeInjectGenerator)
   annotationProcessor(libs.avajeInjectGenerator)
   implementation(libs.kotlinLogging)
 
