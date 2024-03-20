@@ -1,6 +1,6 @@
 /*
- * Scenic View, 
- * Copyright (C) 2012 Jonathan Giles, Ander Ruiz, Amy Fowler 
+ * Scenic View,
+ * Copyright (C) 2012 Jonathan Giles, Ander Ruiz, Amy Fowler
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,40 +17,41 @@
  */
 package org.fxconnector.event;
 
+import java.util.List;
+import org.fxconnector.StageID;
 import org.fxconnector.details.Detail;
 import org.fxconnector.details.DetailPaneType;
-import java.util.List;
-
-import org.fxconnector.StageID;
-
 
 public class DetailsEvent extends FXConnectorEvent {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -6272264701263599805L;
-    private final DetailPaneType paneType;
-    private final String paneName;
-    final List<Detail> details;
+  /** */
+  private static final long serialVersionUID = -6272264701263599805L;
 
-    public DetailsEvent(final SVEventType type, final StageID id, final DetailPaneType dtype, final String paneName, final List<Detail> details) {
-        super(type, id);
-        this.paneType = dtype;
-        this.paneName = paneName;
-        this.details = details;
-    }
+  private final DetailPaneType paneType;
+  private final String paneName;
+  final List<Detail> details;
 
-    public List<Detail> getDetails() {
-        return details;
-    }
+  public DetailsEvent(
+      final SVEventType type,
+      final StageID id,
+      final DetailPaneType dtype,
+      final String paneName,
+      final List<Detail> details) {
+    super(type, id);
+    this.paneType = dtype;
+    this.paneName = paneName;
+    this.details = details;
+  }
 
-    public DetailPaneType getPaneType() {
-        return paneType;
-    }
+  public List<Detail> getDetails() {
+    return details;
+  }
 
-    public String getPaneName() {
-        return paneName;
-    }
+  public DetailPaneType getPaneType() {
+    return paneType;
+  }
 
+  public String getPaneName() {
+    return paneName;
+  }
 }

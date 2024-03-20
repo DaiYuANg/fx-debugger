@@ -1,5 +1,5 @@
 /*
- * Scenic View, 
+ * Scenic View,
  * Copyright (C) 2012 Jonathan Giles, Ander Ruiz, Amy Fowler, Matthieu Brouillard
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,23 +20,26 @@ package org.scenicview.extensions.cssfx.module.impl;
 import static org.scenicview.extensions.cssfx.module.impl.log.CSSFXLogger.logger;
 
 import java.lang.reflect.Method;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 
 public class ApplicationStages {
-    @SuppressWarnings("unchecked")
-    public static ObservableList<Stage> monitoredStages(Stage ...restrictedTo) {
-        try {
-            Class<?> sh = Class.forName("com.sun.javafx.stage.StageHelper");
-            Method m = sh.getMethod("getStages");
-            ObservableList<Stage> stages = (ObservableList<Stage>) m.invoke(null, new Object[0]);
-            logger(ApplicationStages.class).debug("successfully retrieved JavaFX stages from com.sun.javafx.stage.StageHelper");
-            return stages;
-        } catch (Exception e) {
-            logger(ApplicationStages.class).error("cannot observe stages changes by calling com.sun.javafx.stage.StageHelper.getStages()", e);
-        }
-        return FXCollections.emptyObservableList();
+  @SuppressWarnings("unchecked")
+  public static ObservableList<Stage> monitoredStages(Stage... restrictedTo) {
+    try {
+      Class<?> sh = Class.forName("com.sun.javafx.stage.StageHelper");
+      Method m = sh.getMethod("getStages");
+      ObservableList<Stage> stages = (ObservableList<Stage>) m.invoke(null, new Object[0]);
+      logger(ApplicationStages.class)
+          .debug("successfully retrieved JavaFX stages from com.sun.javafx.stage.StageHelper");
+      return stages;
+    } catch (Exception e) {
+      logger(ApplicationStages.class)
+          .error(
+              "cannot observe stages changes by calling com.sun.javafx.stage.StageHelper.getStages()",
+              e);
     }
+    return FXCollections.emptyObservableList();
+  }
 }

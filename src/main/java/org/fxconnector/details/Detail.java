@@ -1,6 +1,6 @@
 /*
- * Scenic View, 
- * Copyright (C) 2012 Jonathan Giles, Ander Ruiz, Amy Fowler 
+ * Scenic View,
+ * Copyright (C) 2012 Jonathan Giles, Ander Ruiz, Amy Fowler
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,13 +21,11 @@ import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.Property;
 import javafx.beans.value.WritableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.Region;
-
 import org.fxconnector.StageID;
 import org.fxconnector.event.DetailsEvent;
 import org.fxconnector.event.FXConnectorEvent.SVEventType;
@@ -35,311 +33,323 @@ import org.fxconnector.event.FXConnectorEventDispatcher;
 
 public class Detail implements Serializable {
 
-    public static final String EMPTY_DETAIL = "---";
+  public static final String EMPTY_DETAIL = "---";
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 835749512117709621L;
+  /** */
+  private static final long serialVersionUID = 835749512117709621L;
 
-    private static final String STATUS_NOT_SET = "Value can not be changed ";
-    public static final String STATUS_NOT_SUPPORTED = STATUS_NOT_SET + "(Not supported yet)";
-    public static final String STATUS_BOUND = STATUS_NOT_SET + "(Bound property)";
-    public static final String STATUS_EXCEPTION = STATUS_NOT_SET + "an exception has ocurred:";
-    public static final String STATUS_READ_ONLY = STATUS_NOT_SET + "(Read-Only property)";
+  private static final String STATUS_NOT_SET = "Value can not be changed ";
+  public static final String STATUS_NOT_SUPPORTED = STATUS_NOT_SET + "(Not supported yet)";
+  public static final String STATUS_BOUND = STATUS_NOT_SET + "(Bound property)";
+  public static final String STATUS_EXCEPTION = STATUS_NOT_SET + "an exception has ocurred:";
+  public static final String STATUS_READ_ONLY = STATUS_NOT_SET + "(Read-Only property)";
 
-    /**
-     * Represents the left-hand side of the two columns in the detail grid
-     */
-    public enum LabelType {
-        NORMAL, LAYOUT_BOUNDS, BOUNDS_PARENT, BASELINE
+  /** Represents the left-hand side of the two columns in the detail grid */
+  public enum LabelType {
+    NORMAL,
+    LAYOUT_BOUNDS,
+    BOUNDS_PARENT,
+    BASELINE
+  }
+
+  /** Represents the right-hand side of the two columns in the detail grid */
+  public enum ValueType {
+    NORMAL,
+    INSETS,
+    CONSTRAINTS,
+    GRID_CONSTRAINTS,
+    COLOR
+  };
+
+  public enum EditionType {
+    NONE_BOUND,
+    NONE,
+    TEXT,
+    COMBO,
+    SLIDER,
+    COLOR_PICKER
+  }
+
+  private boolean isDefault;
+  private String property;
+  private String label;
+  private String value;
+  private String reason;
+  private LabelType labelType = LabelType.NORMAL;
+  private ValueType valueType = ValueType.NORMAL;
+  private EditionType editionType = EditionType.NONE;
+  transient WritableValue<String> serializer;
+
+  private final transient FXConnectorEventDispatcher dispatcher;
+  private final DetailPaneType detailType;
+  private final int detailID;
+  private final StageID stageID;
+  private final transient List<Detail> details;
+  private static final transient DecimalFormat f = new DecimalFormat("0.0#");
+  private String detailName;
+  private String[] validItems;
+  private double maxValue;
+  private double minValue;
+  private String realValue;
+  private boolean hasGridConstraints;
+  private final List<GridConstraintsDetail> gridConstraintsDetails = new ArrayList<>();
+
+  public Detail(
+      final FXConnectorEventDispatcher dispatcher,
+      final StageID stageID,
+      final DetailPaneType detailType,
+      final int detailID) {
+    this.dispatcher = dispatcher;
+    this.stageID = stageID;
+    this.detailType = detailType;
+    this.detailID = detailID;
+    this.details = new ArrayList<>(1);
+    details.add(this);
+  }
+
+  public void setIsDefault(final boolean isDefault) {
+    this.isDefault = isDefault;
+  }
+
+  public void setLabel(final String label) {
+    this.label = label;
+  }
+
+  public void setValue(final String value) {
+    this.value = value;
+  }
+
+  public final void updated() {
+    dispatcher.dispatchEvent(
+        new DetailsEvent(SVEventType.DETAIL_UPDATED, stageID, detailType, detailName, details));
+  }
+
+  public void setSimpleSizeProperty(final DoubleProperty x, final DoubleProperty y) {
+    if (x != null) {
+      if (x.isBound() && y.isBound()) {
+        unavailableEdition(STATUS_BOUND, EditionType.NONE_BOUND);
+      } else {
+        setSerializer(new SizeSerializer(x, y));
+      }
+    } else {
+      setReason(STATUS_NOT_SUPPORTED);
+      setSerializer(null);
     }
+  }
 
-    /**
-     * Represents the right-hand side of the two columns in the detail grid
-     */
-    public enum ValueType {
-        NORMAL, INSETS, CONSTRAINTS, GRID_CONSTRAINTS, COLOR
-    };
+  void setSerializer(final WritableValue<String> serializer) {
+    setSerializer(serializer, EditionType.NONE);
+  }
 
-    public enum EditionType {
-        NONE_BOUND, NONE, TEXT, COMBO, SLIDER, COLOR_PICKER
-    }
-
-    private boolean isDefault;
-    private String property;
-    private String label;
-    private String value;
-    private String reason;
-    private LabelType labelType = LabelType.NORMAL;
-    private ValueType valueType = ValueType.NORMAL;
-    private EditionType editionType = EditionType.NONE;
-    transient WritableValue<String> serializer;
-
-    private transient final FXConnectorEventDispatcher dispatcher;
-    private final DetailPaneType detailType;
-    private final int detailID;
-    private final StageID stageID;
-    private transient final List<Detail> details;
-    private static transient final DecimalFormat f = new DecimalFormat("0.0#");
-    private String detailName;
-    private String[] validItems;
-    private double maxValue;
-    private double minValue;
-    private String realValue;
-    private boolean hasGridConstraints;
-    private final List<GridConstraintsDetail> gridConstraintsDetails = new ArrayList<>();
-
-    public Detail(final FXConnectorEventDispatcher dispatcher, final StageID stageID, final DetailPaneType detailType, final int detailID) {
-        this.dispatcher = dispatcher;
-        this.stageID = stageID;
-        this.detailType = detailType;
-        this.detailID = detailID;
-        this.details = new ArrayList<>(1);
-        details.add(this);
-
-    }
-
-    public void setIsDefault(final boolean isDefault) {
-        this.isDefault = isDefault;
-    }
-
-    public void setLabel(final String label) {
-        this.label = label;
-    }
-
-    public void setValue(final String value) {
-        this.value = value;
-    }
-
-    public final void updated() {
-        dispatcher.dispatchEvent(new DetailsEvent(SVEventType.DETAIL_UPDATED, stageID, detailType, detailName, details));
-    }
-
-    public void setSimpleSizeProperty(final DoubleProperty x, final DoubleProperty y) {
-        if (x != null) {
-            if (x.isBound() && y.isBound()) {
-                unavailableEdition(STATUS_BOUND, EditionType.NONE_BOUND);
-            } else {
-                setSerializer(new SizeSerializer(x, y));
+  void setSerializer(final WritableValue<String> serializer, final EditionType defaultEditionType) {
+    this.serializer = serializer;
+    this.editionType = defaultEditionType;
+    if (serializer != null) {
+      realValue = serializer.getValue();
+      // Probably this should be an interface...
+      if (serializer instanceof SimpleSerializer) {
+        final org.fxconnector.details.SimpleSerializer.EditionType type =
+            ((SimpleSerializer) serializer).getEditionType();
+        switch (type) {
+          case COMBO:
+            {
+              editionType = EditionType.COMBO;
+              validItems = ((SimpleSerializer) serializer).getValidValues();
+              break;
             }
-        } else {
-            setReason(STATUS_NOT_SUPPORTED);
-            setSerializer(null);
-        }
-    }
-
-    void setSerializer(final WritableValue<String> serializer) {
-        setSerializer(serializer, EditionType.NONE);
-    }
-
-    void setSerializer(final WritableValue<String> serializer, final EditionType defaultEditionType) {
-        this.serializer = serializer;
-        this.editionType = defaultEditionType;
-        if (serializer != null) {
-            realValue = serializer.getValue();
-            // Probably this should be an interface...
-            if (serializer instanceof SimpleSerializer) {
-                final org.fxconnector.details.SimpleSerializer.EditionType type = ((SimpleSerializer) serializer).getEditionType();
-                switch (type) {
-                    case COMBO: {
-                        editionType = EditionType.COMBO;
-                        validItems = ((SimpleSerializer) serializer).getValidValues();
-                        break;
-                    }
-                    case SLIDER: {
-                        editionType = EditionType.SLIDER;
-                        maxValue = ((SimpleSerializer) serializer).getMaxValue();
-                        minValue = ((SimpleSerializer) serializer).getMinValue();
-                        break;
-                    }
-                    case COLOR_PICKER: {
-                        valueType = ValueType.COLOR;
-                        editionType = EditionType.COLOR_PICKER;
-                        break;
-                    }
-                    default: {
-                        editionType = EditionType.TEXT;
-                        break;
-                    }
-                }
-            } else {
-                editionType = EditionType.TEXT;
+          case SLIDER:
+            {
+              editionType = EditionType.SLIDER;
+              maxValue = ((SimpleSerializer) serializer).getMaxValue();
+              minValue = ((SimpleSerializer) serializer).getMinValue();
+              break;
+            }
+          case COLOR_PICKER:
+            {
+              valueType = ValueType.COLOR;
+              editionType = EditionType.COLOR_PICKER;
+              break;
+            }
+          default:
+            {
+              editionType = EditionType.TEXT;
+              break;
             }
         }
+      } else {
+        editionType = EditionType.TEXT;
+      }
     }
+  }
 
-    public final void setReason(final String reason) {
-        this.reason = reason;
+  public final void setReason(final String reason) {
+    this.reason = reason;
+  }
+
+  @SuppressWarnings("rawtypes")
+  public void setEnumProperty(final Property property, final Class<? extends Enum> enumClass) {
+    setSimpleProperty(property, enumClass);
+  }
+
+  public void setSimpleProperty(@SuppressWarnings("rawtypes") final Property property) {
+    setSimpleProperty(property, null);
+  }
+
+  private void setSimpleProperty(
+      @SuppressWarnings("rawtypes") final Property property,
+      @SuppressWarnings({"rawtypes"}) final Class<? extends Enum> enumClass) {
+    if (property != null) {
+      if (property.isBound()) {
+        unavailableEdition(STATUS_BOUND, EditionType.NONE_BOUND);
+      } else {
+        final SimpleSerializer s = new SimpleSerializer(property);
+        s.setEnumClass(enumClass);
+        setSerializer(s);
+      }
+    } else {
+      unavailableEdition(STATUS_NOT_SUPPORTED);
     }
+  }
 
-    @SuppressWarnings("rawtypes") public void setEnumProperty(final Property property, final Class<? extends Enum> enumClass) {
-        setSimpleProperty(property, enumClass);
-    }
+  void unavailableEdition(final String reason) {
+    unavailableEdition(reason, EditionType.NONE);
+  }
 
-    public void setSimpleProperty(@SuppressWarnings("rawtypes") final Property property) {
-        setSimpleProperty(property, null);
-    }
+  void unavailableEdition(final String reason, final EditionType defaultEditionType) {
+    setReason(reason);
+    setSerializer(null, defaultEditionType);
+  }
 
-    private void setSimpleProperty(@SuppressWarnings("rawtypes") final Property property, @SuppressWarnings({ "rawtypes" }) final Class<? extends Enum> enumClass) {
-        if (property != null) {
-            if (property.isBound()) {
-                unavailableEdition(STATUS_BOUND, EditionType.NONE_BOUND);
-            } else {
-                final SimpleSerializer s = new SimpleSerializer(property);
-                s.setEnumClass(enumClass);
-                setSerializer(s);
-            }
-        } else {
-            unavailableEdition(STATUS_NOT_SUPPORTED);
-        }
-    }
+  public void setConstraints(@SuppressWarnings("rawtypes") final ObservableList rowCol) {
+    hasGridConstraints = (rowCol != null && rowCol.size() != 0);
+    gridConstraintsDetails.clear();
+  }
 
-    void unavailableEdition(final String reason) {
-        unavailableEdition(reason, EditionType.NONE);
-    }
+  public void add(final String text, final int colIndex, final int rowIndex) {
+    gridConstraintsDetails.add(new GridConstraintsDetail(text, colIndex, rowIndex));
+  }
 
-    void unavailableEdition(final String reason, final EditionType defaultEditionType) {
-        setReason(reason);
-        setSerializer(null, defaultEditionType);
-    }
+  public void addSize(final double v, final int rowIndex, final int colIndex) {
+    add(v != Region.USE_COMPUTED_SIZE ? f.format(v) : "-", colIndex, rowIndex);
+  }
 
-    public void setConstraints(@SuppressWarnings("rawtypes") final ObservableList rowCol) {
-        hasGridConstraints = (rowCol != null && rowCol.size() != 0);
-        gridConstraintsDetails.clear();
-    }
+  public void addObject(final Object v, final int rowIndex, final int colIndex) {
+    add(v != null ? v.toString() : "-", colIndex, rowIndex);
+  }
 
-    public void add(final String text, final int colIndex, final int rowIndex) {
-        gridConstraintsDetails.add(new GridConstraintsDetail(text, colIndex, rowIndex));
-    }
+  public boolean isDefault() {
+    return isDefault;
+  }
 
-    public void addSize(final double v, final int rowIndex, final int colIndex) {
-        add(v != Region.USE_COMPUTED_SIZE ? f.format(v) : "-", colIndex, rowIndex);
-    }
+  public void setDefault(final boolean isDefault) {
+    this.isDefault = isDefault;
+  }
 
-    public void addObject(final Object v, final int rowIndex, final int colIndex) {
-        add(v != null ? v.toString() : "-", colIndex, rowIndex);
-    }
+  public String getProperty() {
+    return property;
+  }
 
-    public boolean isDefault() {
-        return isDefault;
-    }
+  public void setProperty(final String property) {
+    this.property = property;
+  }
 
-    public void setDefault(final boolean isDefault) {
-        this.isDefault = isDefault;
-    }
+  public LabelType getLabelType() {
+    return labelType;
+  }
 
-    public String getProperty() {
-        return property;
-    }
+  public void setLabelType(final LabelType labelType) {
+    this.labelType = labelType;
+  }
 
-    public void setProperty(final String property) {
-        this.property = property;
-    }
+  public ValueType getValueType() {
+    return valueType;
+  }
 
-    public LabelType getLabelType() {
-        return labelType;
-    }
+  public void setValueType(final ValueType valueType) {
+    this.valueType = valueType;
+  }
 
-    public void setLabelType(final LabelType labelType) {
-        this.labelType = labelType;
-    }
+  public String getLabel() {
+    return label;
+  }
 
-    public ValueType getValueType() {
-        return valueType;
-    }
+  public String getValue() {
+    return value;
+  }
 
-    public void setValueType(final ValueType valueType) {
-        this.valueType = valueType;
-    }
+  public String getReason() {
+    return reason;
+  }
 
-    public String getLabel() {
-        return label;
-    }
+  public DetailPaneType getDetailType() {
+    return detailType;
+  }
 
-    public String getValue() {
-        return value;
-    }
+  public String getDetailName() {
+    return detailName;
+  }
 
-    public String getReason() {
-        return reason;
-    }
+  public void setDetailName(final String detailName) {
+    this.detailName = detailName;
+  }
 
-    public DetailPaneType getDetailType() {
-        return detailType;
-    }
+  public EditionType getEditionType() {
+    return editionType;
+  }
 
-    public String getDetailName() {
-        return detailName;
-    }
+  public String[] getValidItems() {
+    return validItems;
+  }
 
-    public void setDetailName(final String detailName) {
-        this.detailName = detailName;
-    }
+  public double getMaxValue() {
+    return maxValue;
+  }
 
-    public EditionType getEditionType() {
-        return editionType;
-    }
+  public double getMinValue() {
+    return minValue;
+  }
 
-    public String[] getValidItems() {
-        return validItems;
-    }
+  public String getRealValue() {
+    return realValue;
+  }
 
-    public double getMaxValue() {
-        return maxValue;
-    }
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + detailID;
+    result = prime * result + ((detailType == null) ? 0 : detailType.hashCode());
+    result = prime * result + ((stageID == null) ? 0 : stageID.hashCode());
+    return result;
+  }
 
-    public double getMinValue() {
-        return minValue;
-    }
+  @Override
+  public boolean equals(final Object obj) {
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
+    final Detail other = (Detail) obj;
+    if (detailID != other.detailID) return false;
+    if (detailType != other.detailType) return false;
+    if (stageID == null) {
+      if (other.stageID != null) return false;
+    } else if (!stageID.equals(other.stageID)) return false;
+    return true;
+  }
 
-    public String getRealValue() {
-        return realValue;
-    }
+  public int getDetailID() {
+    return detailID;
+  }
 
-    @Override public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + detailID;
-        result = prime * result + ((detailType == null) ? 0 : detailType.hashCode());
-        result = prime * result + ((stageID == null) ? 0 : stageID.hashCode());
-        return result;
-    }
+  public boolean hasGridConstraints() {
+    return hasGridConstraints;
+  }
 
-    @Override public boolean equals(final Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final Detail other = (Detail) obj;
-        if (detailID != other.detailID)
-            return false;
-        if (detailType != other.detailType)
-            return false;
-        if (stageID == null) {
-            if (other.stageID != null)
-                return false;
-        } else if (!stageID.equals(other.stageID))
-            return false;
-        return true;
-    }
+  public List<GridConstraintsDetail> getGridConstraintsDetails() {
+    return gridConstraintsDetails;
+  }
 
-    public int getDetailID() {
-        return detailID;
-    }
-
-    public boolean hasGridConstraints() {
-        return hasGridConstraints;
-    }
-
-    public List<GridConstraintsDetail> getGridConstraintsDetails() {
-        return gridConstraintsDetails;
-    }
-
-    public static boolean isEditionSupported(final EditionType editionType) {
-        return editionType != EditionType.NONE && editionType != EditionType.NONE_BOUND;
-    }
-
+  public static boolean isEditionSupported(final EditionType editionType) {
+    return editionType != EditionType.NONE && editionType != EditionType.NONE_BOUND;
+  }
 }

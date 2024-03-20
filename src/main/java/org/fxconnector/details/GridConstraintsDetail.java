@@ -1,6 +1,6 @@
 /*
- * Scenic View, 
- * Copyright (C) 2012 Jonathan Giles, Ander Ruiz, Amy Fowler 
+ * Scenic View,
+ * Copyright (C) 2012 Jonathan Giles, Ander Ruiz, Amy Fowler
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,33 +21,39 @@ import java.io.Serializable;
 
 public final class GridConstraintsDetail implements Serializable {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -4944813187008963711L;
-    private final String text;
-    private final int colIndex;
-    private final int rowIndex;
+  /** */
+  private static final long serialVersionUID = -4944813187008963711L;
 
-    GridConstraintsDetail(final String text, final int colIndex, final int rowIndex) {
-        this.text = text;
-        this.colIndex = colIndex;
-        this.rowIndex = rowIndex;
-    }
+  private final String text;
+  private final int colIndex;
+  private final int rowIndex;
 
-    public String getText() {
-        return text;
-    }
+  GridConstraintsDetail(final String text, final int colIndex, final int rowIndex) {
+    this.text = text;
+    this.colIndex = colIndex;
+    this.rowIndex = rowIndex;
+  }
 
-    public int getColIndex() {
-        return colIndex;
-    }
+  public String getText() {
+    return text;
+  }
 
-    public int getRowIndex() {
-        return rowIndex;
-    }
+  public int getColIndex() {
+    return colIndex;
+  }
 
-    @Override public String toString() {
-        return "GridConstraintsDetail [text=" + text + ", colIndex=" + colIndex + ", rowIndex=" + rowIndex + "]";
-    }
+  public int getRowIndex() {
+    return rowIndex;
+  }
+
+  @Override
+  public String toString() {
+    return "GridConstraintsDetail [text="
+        + text
+        + ", colIndex="
+        + colIndex
+        + ", rowIndex="
+        + rowIndex
+        + "]";
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Scenic View, 
+ * Scenic View,
  * Copyright (C) 2012 Jonathan Giles, Ander Ruiz, Amy Fowler, Matthieu Brouillard
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,5 +17,4 @@
  */
 package org.scenicview.view.cssfx;
 
-public class MonitoredCSSGlobalModel {
-}
+public class MonitoredCSSGlobalModel {}

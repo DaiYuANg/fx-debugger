@@ -1,6 +1,6 @@
 /*
- * Scenic View, 
- * Copyright (C) 2012 Jonathan Giles, Ander Ruiz, Amy Fowler 
+ * Scenic View,
+ * Copyright (C) 2012 Jonathan Giles, Ander Ruiz, Amy Fowler
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,69 +22,81 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Menu;
 import javafx.scene.control.Tab;
 import javafx.scene.image.ImageView;
-
 import org.fxconnector.node.SVNode;
 import org.scenicview.utils.ExceptionLogger;
-import org.scenicview.view.control.ProgressWebView;
 import org.scenicview.view.ContextMenuContainer;
 import org.scenicview.view.DisplayUtils;
 import org.scenicview.view.ScenicViewGui;
+import org.scenicview.view.control.ProgressWebView;
 
 public class JavaDocTab extends Tab implements ContextMenuContainer {
-    
-    private final ScenicViewGui scenicView;
-    
-    private final ProgressWebView webView;
-    
-    public static final String TAB_NAME = "JavaDoc";
 
-    public JavaDocTab(final ScenicViewGui view) {
-        super(TAB_NAME);
-        
-        this.scenicView = view;
-        this.webView = new ProgressWebView();
-        webView.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+  private final ScenicViewGui scenicView;
 
-        setContent(webView);
-        setGraphic(new ImageView(DisplayUtils.getUIImage("javadoc.png")));
-        setClosable(false);
-        selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override public void changed(final ObservableValue<? extends Boolean> arg0, final Boolean arg1, final Boolean newValue) {
+  private final ProgressWebView webView;
+
+  public static final String TAB_NAME = "JavaDoc";
+
+  public JavaDocTab(final ScenicViewGui view) {
+    super(TAB_NAME);
+
+    this.scenicView = view;
+    this.webView = new ProgressWebView();
+    webView.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
+    setContent(webView);
+    setGraphic(new ImageView(DisplayUtils.getUIImage("javadoc.png")));
+    setClosable(false);
+    selectedProperty()
+        .addListener(
+            new ChangeListener<Boolean>() {
+              @Override
+              public void changed(
+                  final ObservableValue<? extends Boolean> arg0,
+                  final Boolean arg1,
+                  final Boolean newValue) {
                 if (newValue) {
-                    DisplayUtils.showWebView(true);
-                    loadAPI(null);
+                  DisplayUtils.showWebView(true);
+                  loadAPI(null);
                 } else {
-                    DisplayUtils.showWebView(false);
+                  DisplayUtils.showWebView(false);
                 }
-            }
-        });
-    }
+              }
+            });
+  }
 
-    @Override
-    public Menu getMenu() {
-        return null;
+  @Override
+  public Menu getMenu() {
+    return null;
+  }
+
+  public void loadAPI(final String property) {
+    SVNode selectedNode = scenicView.getSelectedNode();
+
+    if (selectedNode == null
+        || selectedNode.getNodeClassName() == null
+        || !selectedNode.getNodeClassName().startsWith("javafx.")) {
+      webView.doLoad("https://openjfx.io/javadoc/21/index.html");
+    } else {
+      String baseClass = selectedNode.getNodeClassName();
+      String baseModule;
+      try {
+        baseModule = Class.forName(baseClass).getModule().getName();
+      } catch (ClassNotFoundException e) {
+        ExceptionLogger.submitException(e);
+        return;
+      }
+      if (property != null) {
+        baseClass = scenicView.findProperty(baseClass, property);
+      }
+      final String page =
+          "https://openjfx.io/javadoc/21/"
+              + baseModule
+              + "/"
+              + baseClass.replace('.', '/')
+              + ".html"
+              + (property != null ? ("#" + property + "Property") : "");
+      webView.doLoad(page);
     }
-    
-    public void loadAPI(final String property) {
-        SVNode selectedNode = scenicView.getSelectedNode();
-        
-        if (selectedNode == null || selectedNode.getNodeClassName() == null || !selectedNode.getNodeClassName().startsWith("javafx.")) {
-            webView.doLoad("https://openjfx.io/javadoc/21/index.html");
-        } else {
-            String baseClass = selectedNode.getNodeClassName();
-            String baseModule;
-            try {
-                baseModule = Class.forName(baseClass).getModule().getName();
-            } catch (ClassNotFoundException e) {
-                ExceptionLogger.submitException(e);
-                return;
-            }
-            if (property != null) {
-                baseClass = scenicView.findProperty(baseClass, property);
-            }
-            final String page = "https://openjfx.io/javadoc/21/" + baseModule + "/" + baseClass.replace('.', '/') + ".html"
-                    + (property != null ? ("#" + property + "Property") : "");
-            webView.doLoad(page);
-        }
-    }
+  }
 }

@@ -1,6 +1,6 @@
 /*
- * Scenic View, 
- * Copyright (C) 2012 Jonathan Giles, Ander Ruiz, Amy Fowler 
+ * Scenic View,
+ * Copyright (C) 2012 Jonathan Giles, Ander Ruiz, Amy Fowler
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,16 +18,15 @@
 package org.fxconnector.remote;
 
 import java.util.List;
-
 import org.fxconnector.AppController;
 
 public interface FXConnector {
 
-    public static final String VERSION = "1.0.0";
-//    public static final String SCENIC_VIEW_VM = "scenicview.vm";
+  public static final String VERSION = "1.0.0";
 
-    List<AppController> connect();
+  //    public static final String SCENIC_VIEW_VM = "scenicview.vm";
 
-    void close();
+  List<AppController> connect();
 
+  void close();
 }
