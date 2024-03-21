@@ -10,8 +10,4 @@ repositories {
 }
 
 dependencies {
-  implementation(libs.kotlinGradlePlugin)
-  implementation(libs.kotlinGradleLombokPlugin)
-  implementation(libs.kotlinGradleAllOpenPlugin)
-  implementation(libs.kotlinGradleSerializationPlugin)
 }

@@ -32,4 +32,4 @@ gitHooks {
   createHooks(true)
 }
 
-rootProject.name = "scenic-view"
+rootProject.name = "fx-debugger"

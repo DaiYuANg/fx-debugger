@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TabPane?>
+<?import org.fx.debugger.component.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<TabPane xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml"
+         fx:controller="org.fx.debugger.controller.TabContentController"
+>
+  <NonCloseableTab text="Detail">
+    <graphic>
+      <FontIcon iconLiteral="fltfal-info-28" iconSize="64"/>
+    </graphic>
+    <fx:include source="NodeDetail.fxml"/>
+  </NonCloseableTab>
+  <NonCloseableTab text="Event">
+    <graphic>
+      <FontIcon iconLiteral="fltfal-flag-pride-20" iconSize="64"/>
+    </graphic>
+    <fx:include source="NodeEvent.fxml"/>
+  </NonCloseableTab>
+  <NonCloseableTab text="JavaDoc">
+    <graphic>
+      <FontIcon iconLiteral="di-java" iconSize="64"/>
+    </graphic>
+    <fx:include source="NodeEvent.fxml"/>
+  </NonCloseableTab>
+  <NonCloseableTab text="ThreeDom">
+    <graphic>
+      <FontIcon iconLiteral="fltfal-earth-20" iconSize="64"/>
+    </graphic>
+    <fx:include source="NodeEvent.fxml"/>
+  </NonCloseableTab>
+  <NonCloseableTab text="CSS FX">
+    <graphic>
+      <FontIcon iconLiteral="di-css3_full" iconSize="64"/>
+    </graphic>
+    <fx:include source="NodeEvent.fxml"/>
+  </NonCloseableTab>
+  <NonCloseableTab text="Animations">
+    <graphic>
+      <FontIcon iconLiteral="fas-spinner"/>
+    </graphic>
+  </NonCloseableTab>
+</TabPane>

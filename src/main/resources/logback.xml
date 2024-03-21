@@ -30,6 +30,6 @@
     <appender-ref ref="ASYNC"/>
   </root>
 
-  <logger name="org.scenicview" level="TRACE"/>
+  <logger name="org.fx" level="DEBUG"/>
 
 </configuration>

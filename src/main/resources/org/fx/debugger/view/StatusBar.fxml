@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.HBox?>
+<HBox fx:id="mainStatusBar" spacing="4" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.fx.debugger.controller.StatusBarController"
+>
+  <Label text="Stage">
+    <Tooltip text="This is a button tooltip"/>
+  </Label>
+</HBox>

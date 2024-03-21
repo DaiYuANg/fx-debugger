@@ -13,22 +13,20 @@ plugins {
   alias(libs.plugins.dotenv)
   alias(libs.plugins.spotless)
   alias(libs.plugins.plantuml)
-  kotlin
-  `kotlin-lombok`
-  `kotlin-allopen`
-  `kotlinx-serialization`
-  `kotlin-kapt`
+  alias(libs.plugins.shadow)
   idea
 }
 
+group = "org.fx.debugger"
+version = "21.0.1"
+
+val manClassPath = "org.fx.debugger.FxDebugger"
+
 application {
-  mainModule = "org.scenicview.scenicview"
-  mainClass = "org.scenicview.ScenicView"
+  mainModule = "org.fx.scenicview"
+  mainClass = manClassPath
   applicationDefaultJvmArgs = devJvmArguments
 }
-
-group = "org.scenic-view"
-version = "21.0.1"
 
 defaultTasks("install")
 
@@ -43,19 +41,11 @@ java {
 tasks.compileJava {
   options.compilerArgumentProviders.add(
     CommandLineArgumentProvider {
-      listOf("--patch-module", "org.scenicview.scenicview=${sourceSets["main"].output.asPath}")
+      listOf("--patch-module", "$group=${sourceSets["main"].output.asPath}")
     },
   )
   options.encoding = StandardCharsets.UTF_8.name()
   options.isIncremental = true
-}
-
-tasks.compileKotlin {
-  val dir: DirectoryProperty = tasks.compileJava.get().destinationDirectory
-  destinationDirectory.set(dir)
-  kotlinOptions {
-    incremental = true
-  }
 }
 
 repositories {
@@ -82,20 +72,17 @@ dependencies {
   implementation(libs.controlfx)
   implementation(libs.animated)
   implementation(libs.flowless)
-  implementation(libs.preferencesfx)
   implementation(libs.ikonliJavafx)
   implementation(libs.formfx)
+
+  implementation(libs.fastutil)
+
+  implementation(libs.picocli)
+  annotationProcessor(libs.picocliCodegen)
+
   compileOnly(libs.jetbrainsAnnotation)
 
-//  annotationProcessor(libs.avajeInjectGenerator)
   annotationProcessor(libs.avajeInjectGenerator)
-  implementation(libs.kotlinLogging)
-
-  implementation(libs.gestaltConfig)
-  implementation(libs.gestaltKotlin)
-  implementation(libs.gestaltJSON)
-  implementation(libs.gestaltToml)
-  implementation(libs.gestaltYaml)
 
   implementation(libs.apacheCommonIO)
   implementation(libs.apacheCommonLang3)
@@ -110,15 +97,6 @@ dependencies {
   testImplementation(libs.junitPlatformSuite)
 }
 
-kotlin {
-  jvmToolchain(libs.versions.jdkVersion.get().toInt())
-}
-
-kapt {
-  showProcessorStats = true
-  keepJavacAnnotationProcessors = true
-}
-
 javafx {
   version = libs.versions.javafxVersion.get()
   modules = listOf("javafx.web", "javafx.fxml", "javafx.swing")
@@ -126,14 +104,14 @@ javafx {
 
 tasks.jar {
   manifest {
-    attributes["Main-Class"] = "org.scenicview.ScenicView"
+    attributes["Main-Class"] = manClassPath
     attributes["Agent-Class"] = "org.fxconnector.remote.RuntimeAttach"
-    attributes["Premain-Class"] = "org.scenicview.ScenicView"
-    attributes["Automatic-Module-Name"] = "org.scenicview.scenicview"
+    attributes["Premain-Class"] = "org.fx.debugger.ScenicView"
+    attributes["Automatic-Module-Name"] = group
   }
   enabled = true
   duplicatesStrategy = DuplicatesStrategy.INCLUDE
-  archiveFileName = "scenicview.jar"
+  archiveFileName = "${rootProject.name}.jar"
 }
 
 val platform =
@@ -152,7 +130,7 @@ val platform =
   }
 
 jlink {
-  addExtraDependencies("slf4j", "javafx", "kotlin")
+  addExtraDependencies("slf4j", "javafx")
   options.addAll("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages")
   launcher {
     name = "scenicView"
@@ -160,8 +138,8 @@ jlink {
     jvmArgs = devJvmArguments
   }
   enableCds()
-  imageDir = layout.buildDirectory.dir("scenicview")
-  imageZip = layout.buildDirectory.file("dist/scenicview-${JavaVersion.current()}-$platform.zip")
+  imageDir = layout.buildDirectory.dir(project.name)
+  imageZip = layout.buildDirectory.file("dist/${project.name}-${JavaVersion.current()}-$platform.zip")
   mergedModule {
     additive = true
   }
@@ -170,8 +148,8 @@ jlink {
 tasks.jlink {
   doLast {
     copy {
-      from(layout.buildDirectory.file("libs/scenicview.jar"))
-      into(layout.buildDirectory.dir("scenicview/lib"))
+      from(layout.buildDirectory.file("libs/${project.name}.jar"))
+      into(layout.buildDirectory.dir("${project.name}/lib"))
     }
   }
 }
@@ -189,7 +167,6 @@ spotless {
     target(miscTarget)
     indentWithSpaces(identWidth)
     trimTrailingWhitespace()
-    targetExclude("**/node_modules/**/*")
     endWithNewline()
   }
   java {
@@ -203,11 +180,6 @@ spotless {
       .addTypeAnnotation("NonEmpty")
       .removeTypeAnnotation("Localized")
   }
-  kotlin {
-    target("**/*.kt")
-    ktfmt()
-    //        ktlint()
-  }
   kotlinGradle {
     target("**/*.gradle.kts")
     ktfmt()
@@ -218,7 +190,6 @@ spotless {
     indentWithSpaces(identWidth)
   }
   json {
-    targetExclude("**/node_modules/**/*")
     target("**/src/**/*.json")
     jackson()
   }
@@ -278,7 +249,12 @@ configure<ClassDiagramsExtension> {
   )
 }
 
-val integrationTestCompilation =
-  kotlin.target.compilations.create("integrationTest") {
-    associateWith(kotlin.target.compilations.getByName("main"))
-  }
+tasks.shadowJar {
+  minimize()
+  mergeServiceFiles()
+}
+
+tasks.withType(AbstractArchiveTask::class.java) {
+  isPreserveFileTimestamps = false
+  isReproducibleFileOrder = true
+}

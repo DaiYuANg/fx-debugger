@@ -3,13 +3,13 @@ slf4j = "2.1.0-alpha1"
 jdkVersion = "21"
 javafxVersion = "21"
 avajeInject = "9.12-RC2"
-kotlin = "1.9.23"
 mapstruct = "1.6.0.Beta1"
 mockito = "5.11.0"
 junit = "5.10.2"
 ikonli = "12.3.1"
 gestalt = "0.25.0"
 picocli = "4.7.5"
+groovy = "5.0.0-alpha-7"
 
 [plugins]
 lombok = { id = "name.remal.lombok", version = "2.2.4" }
@@ -21,6 +21,7 @@ manifest = { id = "com.coditory.manifest", version = "0.2.6" }
 jreleaser = { id = "org.jreleaser", version = "1.11.0" }
 dotenv = { id = "co.uzzu.dotenv.gradle", version = '4.0.0' }
 plantuml = { id = "io.gitlab.plunts.plantuml", version = "2.1.7" }
+shadow = { id = "io.github.goooler.shadow", version = "8.1.7" }
 
 [libraries]
 #Slf4j
@@ -34,6 +35,8 @@ fastutil = { group = "it.unimi.dsi", name = "fastutil", version = "8.5.13" }
 avajeInject = { group = "io.avaje", name = "avaje-inject", version.ref = "avajeInject" }
 avajeInjectTest = { group = "io.avaje", name = "avaje-inject-test", version.ref = "avajeInject" }
 avajeInjectGenerator = { group = "io.avaje", name = "avaje-inject-generator", version.ref = "avajeInject" }
+avajeConfig = {group="io.avaje",name="avaje-config",version="3.12"}
+
 mapstruct = { group = "org.mapstruct", name = "mapstruct", version.ref = "mapstruct" }
 mapstructProcessor = { group = "org.mapstruct", name = "mapstruct-processor", version.ref = "mapstruct" }
 oshi = { group = "com.github.oshi", name = "oshi-core-java11", version = "6.5.0" }
@@ -49,15 +52,8 @@ atlantafx = { group = "io.github.mkpaz", name = "atlantafx-base", version = "2.0
 controlfx = { group = "org.controlsfx", name = "controlsfx", version = "11.2.1" }
 animated = { group = "eu.iamgio", name = "animated", version = "1.3.0" }
 flowless = { group = "org.fxmisc.flowless", name = "flowless", version = "0.7.2" }
-preferencesfx = { group = "com.dlsc.preferencesfx", name = "preferencesfx-core", version = "11.17.0" }
 ikonliJavafx = { group = "org.kordamp.ikonli", name = "ikonli-javafx", version.ref = "ikonli" }
 formfx = { group = "com.dlsc.formsfx", name = "formsfx-core", version = "11.6.0" }
-
-gestaltConfig = { group = "com.github.gestalt-config", name = "gestalt-core", version.ref = "gestalt" }
-gestaltToml = { group = "com.github.gestalt-config", name = "gestalt-toml", version.ref = "gestalt" }
-gestaltYaml = { group = "com.github.gestalt-config", name = "gestalt-yaml", version.ref = "gestalt" }
-gestaltJSON = { group = "com.github.gestalt-config", name = "gestalt-json", version.ref = "gestalt" }
-gestaltKotlin = { group = "com.github.gestalt-config", name = "gestalt-kotlin", version.ref = "gestalt" }
 
 apacheCommonIO = { group = "commons-io", name = "commons-io", version = "2.14.0" }
 apacheCommonLang3 = { group = "org.apache.commons", name = "commons-lang3", version = "3.14.0" }
@@ -66,6 +62,7 @@ apacheCommonPool = { group = "org.apache.commons", name = "commons-pool2", versi
 picocli = { group = "info.picocli", name = "picocli", version.ref = "picocli" }
 picocliJline = { group = "info.picocli", name = "picocli-shell-jline3", version.ref = "picocli" }
 picocliCodegen = { group = "info.picocli", name = "picocli-codegen", version.ref = "picocli" }
+
 #Test
 junitBom = { group = "org.junit", name = "junit-bom", version.ref = "junit" }
 junitJuiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit" }
@@ -75,10 +72,3 @@ junitPlatformSuite = { group = "org.junit.platform", name = "junit-platform-suit
 junitPerf = { group = "com.github.noconnor", name = "junitperf-junit5", version = "1.35.0" }
 mockitoCore = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
 mockitoJunit = { group = "org.mockito", name = "mockito-junit-jupiter", version.ref = "mockito" }
-
-kotlinGradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
-kotlinGradleLombokPlugin = { group = "org.jetbrains.kotlin", name = "kotlin-lombok", version.ref = "kotlin" }
-kotlinGradleSerializationPlugin = { group = "org.jetbrains.kotlin", name = "kotlin-serialization", version.ref = "kotlin" }
-kotlinGradleNoArgPlugin = { group = "org.jetbrains.kotlin", name = "kotlin-noarg", version.ref = "kotlin" }
-kotlinGradleAllOpenPlugin = { group = "org.jetbrains.kotlin", name = "kotlin-allopen", version.ref = "kotlin" }
-kotlinLogging = { group = "io.github.oshai", name = "kotlin-logging-jvm", version = "6.0.3" }

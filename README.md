@@ -113,7 +113,7 @@ and also add it to the `module-info.java` file requirements:
         requires transitive javafx.web;
         requires transitive javafx.swing;
 
-        requires org.scenicview.scenicview;
+        requires org.fx.scenicview;
 
 Finally, you can run it from the application class:
 
