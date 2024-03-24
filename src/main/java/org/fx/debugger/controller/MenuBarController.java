@@ -9,7 +9,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCombination;
-import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -20,8 +19,6 @@ import org.fx.debugger.view.AboutDialog;
 @Slf4j
 @RequiredArgsConstructor
 public class MenuBarController implements Initializable {
-  final Stage stage;
-
   @FXML CheckMenuItem collapseControlsInTree;
 
   @FXML CheckMenuItem collapseContainerControlsInTree;

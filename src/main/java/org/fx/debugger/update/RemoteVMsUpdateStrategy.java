@@ -75,8 +75,8 @@ public class RemoteVMsUpdateStrategy extends WorkerThread implements UpdateStrat
     final List<AppController> actualApps = getActiveApps();
 
     final List<StageController> unused = new ArrayList<>();
-    for (int i = 0; i < actualApps.size(); i++) {
-      unused.addAll(actualApps.get(i).getStages());
+    for (AppController actualApp : actualApps) {
+      unused.addAll(actualApp.getStages());
     }
 
     /** First check new apps */

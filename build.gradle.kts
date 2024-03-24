@@ -62,6 +62,7 @@ dependencies {
   implementation(libs.avajeInject)
   implementation(libs.oshi)
   implementation(libs.logback)
+  implementation(libs.guava)
 
   implementation(libs.simpleicon)
   implementation(libs.fluentuiIcon)

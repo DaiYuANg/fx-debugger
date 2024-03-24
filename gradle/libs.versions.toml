@@ -10,6 +10,7 @@ ikonli = "12.3.1"
 gestalt = "0.25.0"
 picocli = "4.7.5"
 groovy = "5.0.0-alpha-7"
+eclipseCollections = "12.0.0.M3"
 
 [plugins]
 lombok = { id = "name.remal.lombok", version = "2.2.4" }
@@ -62,6 +63,13 @@ apacheCommonPool = { group = "org.apache.commons", name = "commons-pool2", versi
 picocli = { group = "info.picocli", name = "picocli", version.ref = "picocli" }
 picocliJline = { group = "info.picocli", name = "picocli-shell-jline3", version.ref = "picocli" }
 picocliCodegen = { group = "info.picocli", name = "picocli-codegen", version.ref = "picocli" }
+
+guava = { group = "com.google.guava", name = "guava", version = "33.0.0-jre" }
+
+eclipseCollectionsAPI = { group = "org.eclipse.collections", name = "eclipse-collections-api", version.ref = "eclipseCollections" }
+eclipseCollections = { group = "org.eclipse.collections", name = "eclipse-collections", version.ref = "eclipseCollections" }
+eclipseCollectionsForkjoin = { group = "org.eclipse.collections", name = "eclipse-collections-forkjoin", version.ref = "eclipseCollections" }
+eclipseCollectionsTestUtil = { group = "org.eclipse.collections", name = "eclipse-collections-testutils", version.ref = "eclipseCollections" }
 
 #Test
 junitBom = { group = "org.junit", name = "junit-bom", version.ref = "junit" }

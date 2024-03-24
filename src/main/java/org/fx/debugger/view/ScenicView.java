@@ -32,6 +32,7 @@ import org.fx.debugger.context.UIContext;
 import org.fx.debugger.fxconnector.AppController;
 import org.fx.debugger.fxconnector.AppControllerImpl;
 import org.fx.debugger.fxconnector.StageControllerImpl;
+import org.fx.debugger.handle.ExceptionHandler;
 import org.fx.debugger.update.LocalUpdateStrategy;
 import org.jetbrains.annotations.NotNull;
 
@@ -120,6 +121,8 @@ public class ScenicView extends Application {
 
   @Override
   public void init() {
+    val eh = DIContext.INSTANCE.get(ExceptionHandler.class);
+    Thread.currentThread().setUncaughtExceptionHandler(eh);
     Application.setUserAgentStylesheet(new CupertinoDark().getUserAgentStylesheet());
   }
 

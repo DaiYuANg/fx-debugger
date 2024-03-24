@@ -33,6 +33,8 @@ module org.fx.debugger {
   requires org.apache.commons.lang3;
   requires org.apache.commons.pool2;
   requires org.apache.commons.io;
+  requires com.google.common;
+  requires com.github.oshi;
   requires info.picocli;
   requires it.unimi.dsi.fastutil;
   requires org.kordamp.ikonli.core;
