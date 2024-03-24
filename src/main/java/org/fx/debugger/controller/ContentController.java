@@ -1,5 +1,6 @@
 package org.fx.debugger.controller;
 
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -14,7 +15,7 @@ import org.fx.debugger.constant.ConfigConstant;
 
 @Singleton
 @Slf4j
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class ContentController implements Initializable {
 
   @FXML SplitPane contentRoot;

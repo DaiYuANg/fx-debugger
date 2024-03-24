@@ -23,7 +23,6 @@ module org.fx.debugger {
   requires org.slf4j;
   requires static lombok;
   requires static org.jetbrains.annotations;
-  requires io.avaje.inject;
   requires java.instrument;
   requires java.rmi;
   requires java.logging;
@@ -45,6 +44,10 @@ module org.fx.debugger {
   requires org.kordamp.ikonli.simpleicons;
   requires org.kordamp.ikonli.materialdesign2;
   requires java.prefs;
+  requires com.google.guice;
+  requires jakarta.inject;
+  requires io.github.oshai.kotlinlogging;
+  requires kotlin.stdlib;
 
   opens org.fx.debugger.view.cssfx to
       javafx.fxml;
@@ -71,11 +74,16 @@ module org.fx.debugger {
       javafx.fxml;
   exports org.fx.debugger.view;
   exports org.fx.debugger.utils;
+  exports org.fx.debugger.handle to
+      com.google.guice;
+  exports org.fx.debugger.service to
+      com.google.guice;
+  exports org.fx.debugger.provider to
+      com.google.guice;
+  exports org.fx.debugger.controller to
+      com.google.guice;
 
   opens org.fx.debugger.utils to
       java.instrument,
       java.rmi;
-
-  provides io.avaje.inject.spi.Module with
-      org.fx.debugger.DebuggerModule;
 }

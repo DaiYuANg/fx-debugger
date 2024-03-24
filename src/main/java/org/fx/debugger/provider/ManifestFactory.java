@@ -1,7 +1,6 @@
-package org.fx.debugger.factory;
+package org.fx.debugger.provider;
 
-import io.avaje.inject.Bean;
-import io.avaje.inject.Factory;
+import jakarta.inject.Provider;
 import java.io.IOException;
 import java.net.URL;
 import java.time.Instant;
@@ -16,11 +15,10 @@ import org.fx.debugger.constant.ManifestAttribute;
 import org.fx.debugger.model.SelfManifest;
 import org.jetbrains.annotations.NotNull;
 
-@Factory
-public class ManifestFactory {
+public class ManifestFactory implements Provider<SelfManifest> {
   @SneakyThrows
-  @Bean
-  SelfManifest selfManifest() {
+  @Override
+  public SelfManifest get() {
     val url = ManifestFactory.class.getProtectionDomain().getCodeSource().getLocation();
     return readManifestFromJar(url);
   }

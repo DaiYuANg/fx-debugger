@@ -17,6 +17,8 @@ plugins {
   idea
 }
 
+apply<KotlinSetting>()
+
 group = "org.fx.debugger"
 version = "21.0.1"
 
@@ -59,10 +61,13 @@ dependencies {
   implementation(libs.slf4j)
   implementation(libs.slf4jJulBridage)
   implementation(libs.slf4jJdkPlatform)
-  implementation(libs.avajeInject)
   implementation(libs.oshi)
   implementation(libs.logback)
   implementation(libs.guava)
+  implementation(libs.guice)
+  implementation(libs.guiceAssistedinject)
+  implementation(libs.guiceThrowingproviders)
+  implementation(libs.guiceJMX)
 
   implementation(libs.simpleicon)
   implementation(libs.fluentuiIcon)
@@ -82,8 +87,6 @@ dependencies {
   annotationProcessor(libs.picocliCodegen)
 
   compileOnly(libs.jetbrainsAnnotation)
-
-  annotationProcessor(libs.avajeInjectGenerator)
 
   implementation(libs.apacheCommonIO)
   implementation(libs.apacheCommonLang3)
@@ -180,6 +183,10 @@ spotless {
       .addTypeAnnotation("Empty")
       .addTypeAnnotation("NonEmpty")
       .removeTypeAnnotation("Localized")
+  }
+  kotlin {
+    target("**/*.kt")
+    ktfmt()
   }
   kotlinGradle {
     target("**/*.gradle.kts")

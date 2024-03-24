@@ -11,6 +11,8 @@ gestalt = "0.25.0"
 picocli = "4.7.5"
 groovy = "5.0.0-alpha-7"
 eclipseCollections = "12.0.0.M3"
+kotlin = "2.0.0-Beta5"
+guice = "7.0.0"
 
 [plugins]
 lombok = { id = "name.remal.lombok", version = "2.2.4" }
@@ -56,6 +58,14 @@ flowless = { group = "org.fxmisc.flowless", name = "flowless", version = "0.7.2"
 ikonliJavafx = { group = "org.kordamp.ikonli", name = "ikonli-javafx", version.ref = "ikonli" }
 formfx = { group = "com.dlsc.formsfx", name = "formsfx-core", version = "11.6.0" }
 
+guice = { group = "com.google.inject", name = "guice", version.ref = "guice" }
+guiceAssistedinject = { group = "com.google.inject.extensions", name = "guice-assistedinject", version.ref = "guice" }
+guicePersist = { group = "com.google.inject.extensions", name = "guice-persist", version.ref = "guice" }
+guiceJNDI = { group = "com.google.inject.extensions", name = "guice-jndi", version.ref = "guice" }
+guiceJMX = { group = "com.google.inject.extensions", name = "guice-jmx", version.ref = "guice" }
+guiceThrowingproviders = { group = "com.google.inject.extensions", name = "guice-throwingproviders", version.ref = "guice" }
+guiceTestlib = { group = "com.google.inject.extensions", name = "guice-testlib", version.ref = "guice" }
+
 apacheCommonIO = { group = "commons-io", name = "commons-io", version = "2.14.0" }
 apacheCommonLang3 = { group = "org.apache.commons", name = "commons-lang3", version = "3.14.0" }
 apacheCommonPool = { group = "org.apache.commons", name = "commons-pool2", version = "2.12.0" }
@@ -80,3 +90,10 @@ junitPlatformSuite = { group = "org.junit.platform", name = "junit-platform-suit
 junitPerf = { group = "com.github.noconnor", name = "junitperf-junit5", version = "1.35.0" }
 mockitoCore = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
 mockitoJunit = { group = "org.mockito", name = "mockito-junit-jupiter", version.ref = "mockito" }
+
+kotlinGradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlinGradleLombokPlugin = { group = "org.jetbrains.kotlin", name = "kotlin-lombok", version.ref = "kotlin" }
+kotlinGradleSerializationPlugin = { group = "org.jetbrains.kotlin", name = "kotlin-serialization", version.ref = "kotlin" }
+kotlinGradleNoArgPlugin = { group = "org.jetbrains.kotlin", name = "kotlin-noarg", version.ref = "kotlin" }
+kotlinGradleAllOpenPlugin = { group = "org.jetbrains.kotlin", name = "kotlin-allopen", version.ref = "kotlin" }
+kotlinLogging = { group = "io.github.oshai", name = "kotlin-logging-jvm", version = "6.0.3" }
